@@ -5,21 +5,21 @@ var app = (function($) {
 
     var $body = $('body'),
         page = $body.data('page'),
-        // options = {
-        //     elAddToCart: '.js-add-to-cart',
-        //     attrId: 'data-id',
-        //     attrName: 'data-name',
-        //     attrPrice: 'data-price',
-        //     attrDelta: 'data-delta',
-        //     elCart: '#cart',
-        //     elTotalCartCount: '#total-cart-count',
-        //     elTotalCartSumma: '#total-cart-summa',
-        //     elCartItem: '.js-cart-item',
-        //     elCartCount: '.js-count',
-        //     elCartSumma: '.js-summa',
-        //     elChangeCount: '.js-change-count',
-        //     elRemoveFromCart: '.js-remove-from-cart'
-        // },
+        options = {
+            elAddToCart: '.js-add-to-cart',
+            attrId: 'data-id',
+            attrName: 'data-name',
+            attrPrice: 'data-price',
+            attrDelta: 'data-delta',
+            elCart: '#cart',
+            elTotalCartCount: '#total-cart-count',
+            elTotalCartSumma: '#total-cart-summa',
+            elCartItem: '.js-cart-item',
+            elCartCount: '.js-count',
+            elCartSumma: '.js-summa',
+            elChangeCount: '.js-change-count',
+            elRemoveFromCart: '.js-remove-from-cart'
+        },
         optionsCatalog = _.extend({
             renderCartOnInit: false,
             renderMenuCartOnInit: true
