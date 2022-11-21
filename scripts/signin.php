@@ -36,8 +36,6 @@ if (isset($_POST['login'])) {
                 "role" => $_SESSION['user']['role'],
             ], JSON_UNESCAPED_UNICODE);
             exit();
-            
-           
    
         } else {
              $errors = 'Вы ввели неверные данные, попробуйте ещё раз';

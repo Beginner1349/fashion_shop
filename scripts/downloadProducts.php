@@ -1,8 +1,13 @@
 <?php 
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/config.php');
-//var_dump($_FILES);
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/functions/validation.php');
+
 if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
-	$productName = trim( $_POST['product-name']);
+
+	//Создаём переменную для вывода ошибок
+	$messages = [];
+	//Достаем данные и валидируем их
+	$productName = (filterString( $_POST['product-name']) !== FALSE) ? $productName = filterString( $_POST['product-name']) : $messages = "Ошибка ввода!";
 	$productPrice = intval($_POST['price']);
 	$statusGroups = $_POST['status'];
 	$productCategories = $_POST['categories'];
@@ -10,14 +15,8 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 
 	for ($i=0; $i < $count; $i++) {
 		
-		// Получаем имя файла
-		$fileName = $_FILES['image']['name'][$i];
-		// Получаем расширение файла как есть
-		$fileType = $_FILES['image']['type'][$i];
 		// Получаем путь к файлу
 		$fileTmp = $_FILES['image']['tmp_name'][$i];
-		// Получаем данные об имеющихся ошибках
-		$fileError = $_FILES['image']['error'];
 		// Получаем размер файла в байтах
 		$fileSize = $_FILES['image']['size'][$i];
 		// Отделяем расширение от имени файла
@@ -26,11 +25,10 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 		$fileActualExt = strtolower(end($fileExt));
 		// Создаем массив расширений
 		$exp = ["jpg", "jpeg", "png"];
-		//Создаём массив для вывода ошибок
-		$messages = [];
+		
 
 		// Проверяем загруженные файлы на соответствие количеству, формату и размеру
-		if ($count > 5) {
+		if ($count > 1) {
 				$messages = "ERROR.Слишком много файлов!";
 			} else {
 				if (!in_array($fileActualExt, $exp)) {
@@ -38,15 +36,16 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 					echo json_encode($messages, JSON_UNESCAPED_UNICODE);
 					exit();
 					
-				} elseif ($fileSize > 5300576) {
+				} elseif ($fileSize > 3000000) {
 					$messages = "ERROR. Файл слишком большой!";
-					
+					exit();
 				} else {
 					if (is_uploaded_file($_FILES['image']['tmp_name'][$i])) {
 							$newFileName = uniqid('', true) . "." . $fileActualExt;
 			 				$filePuth = '../img/products/' . $newFileName;
 						if (move_uploaded_file($fileTmp, $filePuth)) {
 							$messages = "Файл загружен!";
+							echo json_encode($messages, JSON_UNESCAPED_UNICODE);
 						} else {
 							$messages = "При загрузке файла произошла ошибка!";
 							echo json_encode($messages, JSON_UNESCAPED_UNICODE);
@@ -60,9 +59,6 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 					}
 				}
 			}
-			
-			echo json_encode($messages, JSON_UNESCAPED_UNICODE);
-			//exit();
     }
 	
 	//Отправляем запрос на добавление данных в БД
@@ -78,12 +74,12 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 	$query->execute();
 
 	//Вывод ошибок SQL запросов
-	//$info = $query->errorInfo();
-    //$messages = var_dump($info);
+	$info = $query->errorInfo();
+    
 	
 	// Получаем id вставленной записи
 	$product_id = $pdo->lastInsertId();
-	$messages = (!empty($product_id)) ? ['success' => 'true'] : [];
+	$messages = (!empty($product_id)) ? ['code' => 'success'] : [];
 	echo json_encode($messages, JSON_UNESCAPED_UNICODE);
 	
 	//Получаем id группы товаров
@@ -93,10 +89,8 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 	$idArr = $groupsQuery->fetch(PDO::FETCH_ASSOC);
 	$idGroups = intval($idArr['id']);
 	//Вывод ошибок SQL запросов
-	// $info = $groupsQuery->errorInfo();
+	$info = $groupsQuery->errorInfo();
    
-    //$messages = var_dump($info);
-
 	//Отправлям запрос на добавление id товара и id группы
 	$sqlQuery = $pdo->prepare("INSERT INTO `products_has_categories`(products_id, categories_id) VALUES (:pr_id, :cat_id)");
 	$sqlQuery->bindParam(':cat_id', $idGroups);
@@ -104,8 +98,6 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 	$sqlQuery->execute();
 	//Вывод ошибок SQL запросов
 	$info = $sqlQuery->errorInfo();
-
-   //$messages = var_dump($info);
 
 } else {
     	$messages = "Заполните поля пожалуйста!";

@@ -7,7 +7,7 @@ if ($_SESSION['auth'] !== true) {
 require_once $_SERVER['DOCUMENT_ROOT'] . '/functions/basic.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config.php';
 getHeader();
- $query = "select * from orders";
+ $query = "select * from orders order by dates asc";
  $data = $pdo->prepare($query);
  $data->execute();
  $rows = $data->fetchAll(PDO::FETCH_ASSOC);

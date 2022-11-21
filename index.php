@@ -1,7 +1,6 @@
 <?php
 require_once $_SERVER['DOCUMENT_ROOT'] . '/functions/basic.php';
 require_once $_SERVER['DOCUMENT_ROOT'] . '/config.php';
-var_dump($_GET);
 
 $group_names = get_products_category();
 getHeader();

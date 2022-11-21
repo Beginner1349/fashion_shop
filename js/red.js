@@ -4,7 +4,6 @@ $(document).ready(function() {
     $('#update_form').on('submit', function (e) {
             e.preventDefault();
 			 var formData = new FormData(document.getElementById("update_form"));
-    //var data = $('#update_form').serialize();
     $.ajax({
         url:    "/scripts/red.php", //url страницы
         method: "post", //метод отправки
@@ -16,9 +15,10 @@ $(document).ready(function() {
            console.log(response);
            $('#update_info').text(response);
            $('#update_form').trigger('reset');
-           // if (response.success == true) {
-           //   document.location.replace("http://inetshop.ru/routs/products/index.php");
-           // }
+           $(window).scrollTop(0);
+           if (response.success === "true") {
+             document.location.replace("http://inetshop.ru/routs/products/index.php");
+           }
         },
          error: function(response) {
             console.log(response);

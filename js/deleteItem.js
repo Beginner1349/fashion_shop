@@ -10,6 +10,7 @@ $(document).ready (function() {
         success:function(response){ 
          console.log(response);
          $('#del_msg').text(response);
+         document.location.reload();
         }
       }); 
    });

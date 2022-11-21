@@ -9,7 +9,7 @@ require_once $_SERVER['DOCUMENT_ROOT'] . '/config.php';
 
  $query = "select p.id, p.name, p.price, p.status, cat.name as 'cat' from products as p
 inner join products_has_categories as pc on p.id=pc.products_id
-inner join categories as cat on cat.id=pc.categories_id;";
+inner join categories as cat on cat.id=pc.categories_id order by p.name asc;";
  $data = $pdo->prepare($query);
  $data->execute();
  $rows = $data->fetchAll(PDO::FETCH_ASSOC);

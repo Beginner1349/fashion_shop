@@ -21,7 +21,7 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 		// Создаем массив расширений
 		$exp = ["jpg", "jpeg", "png"];
 		//Создаём массив для вывода ошибок
-		$messages = [];
+		$messages = "";
 
 		// Проверяем загруженные файлы на соответствие количеству, формату и размеру
 		if ($count > 1) {
@@ -40,8 +40,8 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 							$newFileName = uniqid('', true) . "." . $fileActualExt;
 			 				$filePuth = '../img/products/' . $newFileName;
 						if (move_uploaded_file($fileTmp, $filePuth)) {
-							$messages = "Файл успешно загружен!";
-							echo json_encode($messages, JSON_UNESCAPED_UNICODE);
+							 $messages = "Файл успешно загружен!";
+							 echo json_encode($messages, JSON_UNESCAPED_UNICODE);
 						} else {
 							$messages = "При загрузке файла произошла ошибка!";
 							echo json_encode($messages, JSON_UNESCAPED_UNICODE);
@@ -71,8 +71,7 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 	//Вывод ошибок SQL запросов
 	$info = $query->errorInfo();
 	
-	// Получаем id вставленной записи
-	//$product_id = $pdo->lastInsertId();
+	// Проверяем нет ли ошибок при добавлении записи в БД. В случае ошибки выводим текст ошибки или положительный ответ сервера
 	$messages = ($info == ["00000",null,null]) ? ['success' => 'true'] : $info;
 	echo json_encode($messages, JSON_UNESCAPED_UNICODE);
 	
@@ -87,7 +86,6 @@ if (isset($_POST['product-name']) && !empty($_POST['product-name'])) {
 
 	//Отправлям запрос на добавление id товара и id группы
 	$sqlQuery = $pdo->prepare("UPDATE `products_has_categories` SET `categories_id` = $idGroups WHERE `pr_id`=:pr_id");
-	// $sqlQuery->bindParam(':cat_id', $idGroups);
 	$sqlQuery->bindParam(':pr_id', $id);
 	$sqlQuery->execute();
 	//Вывод ошибок SQL запросов

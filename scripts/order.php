@@ -1,10 +1,12 @@
 <?php
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/config.php');
 require_once ($_SERVER['DOCUMENT_ROOT'] . '/functions/basic.php');
- 
+require_once ($_SERVER['DOCUMENT_ROOT'] . '/functions/validation.php');
+
 // Подготавливаем данные
 function getData() {
-    return [
+  
+  return [
         'id_prod' => intval($_POST['id_products']),
         'summa' => intval($_POST['prod_price']),
         'surname' => trim($_POST['surname']),
@@ -26,9 +28,11 @@ function addOrder($data, $pdo) {
     
     global $pdo;
    //Отправляем запрос на добавление данных в БД
-    $query = $pdo->prepare("INSERT INTO `orders` (id, product_id, surname, name, thirdName, phone, email, delivery, comment, status, pay, city, home, aprt, summ) VALUES (:id, :product_id, :surname,:name, :thirdName, :phone, :email, :delivery, :comment, :status, :pay, :city, :home, :aprt, :summ)");
+    $query = $pdo->prepare("INSERT INTO `orders` (id, product_id, surname, name, thirdName, phone, email, delivery, comment, status, pay, city, street, home, aprt, summ, dates) VALUES (:id, :product_id, :surname,:name, :thirdName, :phone, :email, :delivery, :comment, :status, :pay, :city, :street, :home, :aprt, :summ, :dates)");
     $id = NULL;
     $status = 'Не выполнено!';
+    $dates = time();
+    
     $query->bindParam(':id', $id);
     $query->bindParam(':product_id', $data['id_prod'], PDO::PARAM_INT);
     $query->bindParam(':surname', $data['surname'], PDO::PARAM_STR);
@@ -45,6 +49,7 @@ function addOrder($data, $pdo) {
     $query->bindParam(':home', $data['home'], PDO::PARAM_STR);
     $query->bindParam(':aprt', $data['aprt'], PDO::PARAM_STR);
     $query->bindParam(':summ', $data['summa'], PDO::PARAM_INT);
+    $query->bindParam(':dates', $dates, PDO::PARAM_INT);
 
     $query->execute();
     $order_id = $pdo->lastInsertId();
@@ -68,11 +73,11 @@ try {
         echo json_encode([
         'code' => 'success',
         'data' => $data,
-    ]); 
+       ]); 
     } else {
          echo json_encode([
         'code' => 'error',
-        'data' => $order,
+        'data' => "Ошибка SQL запроса",
     ]);
     }
    

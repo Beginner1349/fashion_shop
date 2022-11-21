@@ -53,13 +53,7 @@ getHeader();
     </fieldset>
     <button class="button" type="submit" name="add_products">Добавить товар</button>
   </form>
-   <?php
-            if ($_SESSION['message']) {
-                echo '<p class="msg"> ' . $_SESSION['message'] . ' </p>';
-            }
-            unset($_SESSION['message']);
-    ?>
-  <section class="shop-page__popup-end page-add__popup-end" hidden="">
+  <section class="shop-page__popup-end page-add__popup-end" id="popup_end" hidden="">
     <div class="shop-page__wrapper shop-page__wrapper--popup-end">
       <h2 class="h h--1 h--icon shop-page__end-title">Товар успешно добавлен</h2>
     </div>

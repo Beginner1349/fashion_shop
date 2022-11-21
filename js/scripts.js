@@ -169,16 +169,13 @@ if (shopList) {
                         data: data,  // Передаем данные из формы
                       success: function(response) {
                            console.log(response);
-                           //$('#order_info').text(response);
+                           $('#order_info').text(response.code);
+                           $(window).scrollTop(0);
                            $('#order_form').trigger('reset');
+                           
                            if (response.code == "success") {
-                            $('#order_info').html('Успех! Заказ добавлен!');
-                          // const shopOrder = document.querySelector('.shop-page__order');
-                          // const popupEnd = document.querySelector('.shop-page__popup-end');
-                          //  toggleHidden(shopOrder, popupEnd);
-                          //  popupEnd.classList.add('fade');
-                          //  setTimeout(() => popupEnd.classList.remove('fade'), 1000);
-                           window.scroll(0, 0);
+                            $('#order_info').text('Успех! Заказ добавлен!');
+                          
                            }
                            if (response.code == "error") {
                             $('#order_info').html('Error!' + response);
@@ -314,13 +311,12 @@ if (addList) {
   });
 
   const popupEnd = document.querySelector('.page-add__popup-end');
-  const ajaxForm = document.querySelector('ajax_form');
-  console.log(ajaxForm);
+  const ajaxForm = document.querySelector('#ajax_form');
 
   ajaxForm.addEventListener('submit', (evt) => {
 
     evt.preventDefault();
-    
+ 
     var formData = new FormData(document.getElementById("ajax_form"));
 
     $.ajax({
@@ -334,17 +330,18 @@ if (addList) {
            console.log(response);
            $('#result_form').text(response);
            $('#ajax_form').trigger('reset');
-           if (response.code === 'success') {
-             form.hidden = true;
-             popupEnd.hidden = false;
-           }
+           $(window).scrollTop(0);
+           
+           // if (response.code === 'success') {
+           //   _catalogSuccess(responce);
+           // }
       },
          error: function(response) {
             console.log(response);
             $('#result_form').html('Ошибка. Что-то пошло не так!');
         },
   });
-    return false;
+    //return false;
 
 
 
